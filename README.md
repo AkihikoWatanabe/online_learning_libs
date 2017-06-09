@@ -28,7 +28,7 @@ parallel_num = 6
 # x_train represents feature vector using scipy.sparse.csr_matrix
 # y_train represents labels (1 or -1) corresponding to each feature_vector
 # e.g. discretized feature vector and labels:
-# 	x_train -> [[0.0, 0.0, 1.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0], ...]
+# 	x_train -> scipy.sparse.csr_matrix( [[0.0, 0.0, 1.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0], ...] )
 # 	y_train -> [1.0, -1.0, ...]
 # Also we can use non-discretized (real valued) feature vectors
 x_train, y_train = make_data()
@@ -54,7 +54,7 @@ from predictor import Predictor
 # x_test represents feature vector using scipy.sparse.csr_matrix 
 # y_test represents labels (1 or -1) corresponding to each feature_vector
 # e.g. discretized feature vector and labels:
-# 	x_test -> [[0.0, 0.0, 1.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0], ...]
+# 	x_test -> scipy.sparse.csr_matrix( [[0.0, 0.0, 1.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0], ...] )
 # 	y_test -> [1.0, -1.0, ...]
 # Also we can use non-discretized (real valued) feature vectors
 x_test, y_test = make_data()

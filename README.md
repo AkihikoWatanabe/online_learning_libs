@@ -67,7 +67,6 @@ weight.load_weight("./models/pa", 30)
 # you can set options as follows:
 #	"confidence": predictor returns confidence score for each prediction (real value)
 #       "classify": predictor returns {1, -1} labels according to confidence score for each prediction
-
 predictor = Predictor("classify")
 
 # get result on the prediction for x_test

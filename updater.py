@@ -10,7 +10,7 @@ This implementation is now supporting:
 import numpy as np
 import cPickle
 import gzip
-from Joblib import Parallel, delayed
+from joblib import Parallel, delayed
 
 from update_func import Perceptron, PA_I, PA_II
 
@@ -18,7 +18,7 @@ class Updater():
     """ This class support some online learning methods, i.e. weight update method, using Iterative Parameter Mixture.
     """
 
-    def __init__(self, C, process_num=1, method="PA-II"):
+    def __init__(self, C=0.01, process_num=1, method="PA-II"):
         """ 
         Params:
             weight(Weight): # of dimension for weight vector
@@ -48,6 +48,8 @@ class Updater():
         Params:
             x_list(list): List of feature vectors. Each vector is represented by np.ndarray.
             y_list(list): List of labels corresponding to each feature vector.
+        Returns:
+            loss_list(list): List of loss value
         """
         x_list = np.asarray(x_list)
         y_list = np.asarray(y_list)
@@ -70,9 +72,13 @@ class Updater():
 
         # Iterative Parameter Mixture
         _w_sum = np.asarray([0.0 for _ in xrange(len(weight.w))], dtype=np.float32)
-        for _w in callback:
+        loss_list = []
+        for _w, _loss_list in callback:
             _w_sum += _w
+            loss_list += _loss_list
 
         # insert updated weight
         weight.w =  1.0 / self.PROCESS_NUM * _w_sum
         weight.epoch += 1
+
+        return loss_list

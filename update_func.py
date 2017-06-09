@@ -24,7 +24,7 @@ def Perceptron(i, x_batch, y_batch, w):
     for x, y in zip(x_batch, y_batch):
         if y * w.dot(x) < 0:
             w += y * x
-    return w
+    return w, None 
 
 def PA_I(i, x_batch, y_batch, w, C):
     """ Update weight parameter using PA-I update rule on the given minibatch.
@@ -35,10 +35,13 @@ def PA_I(i, x_batch, y_batch, w, C):
         w(np.ndarray): current weight parameters
         C(float): Parameter to adjust the degree of penalty, aggressiveness parameter (C>=0)
     """
+    loss_list = []
     for x, y in zip(x_batch, y_batch):
-        if hinge_loss(x, y, w) > 0.0:
+        loss = hinge_loss(x, y, w)
+        loss_list.append(loss)
+        if loss > 0.0:
             w += min(C, hinge_loss(x, y, w) / x.dot(x)) * y * x
-    return w
+    return w, loss_list
 
 def PA_II(i, x_batch, y_batch, w, C):
     """ Update weight parameter using PA-II update rule on the given minibatch.
@@ -49,7 +52,10 @@ def PA_II(i, x_batch, y_batch, w, C):
         w(np.ndarray): current weight parameters
         C(float): Parameter to adjust the degree of penalty, aggressiveness parameter (C>=0)
     """
+    loss_list = []
     for x, y in zip(x_batch, y_batch):
-        if hinge_loss(x, y, w) > 0.0:
+        loss = hinge_loss(x, y, w)
+        loss_list.append(loss)
+        if loss > 0.0:
             w += (hinge_loss(x, y, w) / (x.dot(x) + 1.0 / (2.0 * C))) * y * x
-    return w
+    return w, loss_list

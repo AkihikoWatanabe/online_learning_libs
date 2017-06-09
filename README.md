@@ -59,10 +59,10 @@ from predictor import Predictor
 # Also we can use non-discretized (real valued) feature vectors
 x_test, y_test = make_data()
 
-weight = Weight()
 # load trained weight parameters from model file
 # second argument means number of epochs for weight that you want to load
-weight.load_weight("./models/pa", 30) updater = Updater(C, parallel_num)
+weight = Weight()
+weight.load_weight("./models/pa", 30) 
 
 # you can set options as follows:
 #	"confidence": predictor returns confidence score for each prediction (real value)

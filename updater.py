@@ -8,8 +8,7 @@ This implementation is now supporting:
 """
 
 import numpy as np
-import cPickle
-import gzip
+import scipy.sparse as sp
 from joblib import Parallel, delayed
 
 from update_func import Perceptron, PA_I, PA_II
@@ -33,11 +32,11 @@ class Updater():
     def __make_minibatch(self, x_list, y_list):
         """
         Params:
-            x_list(list): List of feature vectors. Each vector is represented by np.ndarray
-            y_list(list): List of labels corresponding to each feature vector
+            x_list(csr_matrix): csr_matrix of feature vectors.
+            y_list(csr_matrix): csr_matrix of labels corresponding to each feature vector
         Returns:
-            x_batch(list): batch of feature vectors
-            y_batch(list): batch of labels
+            x_batch(csr_matrix): batch of feature vectors
+            y_batch(csr_matrix): batch of labels
         """
 
         x_batch = []
@@ -56,14 +55,12 @@ class Updater():
     def update(self, x_list, y_list, weight):
         """ Update weight parameter according to PA-II update rule.
         Params:
-            x_list(list): List of feature vectors. Each vector is represented by np.ndarray
-            y_list(list): List of labels corresponding to each feature vector
+            x_list(csr_matrix): csr_matrix of feature vectors.
+            y_list(csr_matrix): csr_matrix of labels corresponding to each feature vector
         Returns:
             loss_list(list): List of loss value
         """
-        x_list = np.asarray(x_list)
-        y_list = np.asarray(y_list)
-        assert len(x_list) == len(y_list), "invalid length: x_list, y_list"
+        assert x_list.shape[0] == y_list.shape[0], "invalid shape: x_list, y_list"
         
         # make minibatch for Iterative Parameter Mixture
         x_batch, y_batch = self.__make_minibatch(x_list, y_list)
@@ -71,17 +68,17 @@ class Updater():
         # choose learning method and run
         if self.METHOD == "Perceptron":
             callback = Parallel(n_jobs=self.PROCESS_NUM)( \
-                    delayed(Perceptron)(i, x_batch[i], y_batch[i], np.array(weight.w)) for i in range(self.PROCESS_NUM)) 
+                    delayed(Perceptron)(i, x_batch[i], y_batch[i], weight.w) for i in range(self.PROCESS_NUM)) 
         elif self.METHOD == "PA-I":
             callback = Parallel(n_jobs=self.PROCESS_NUM)( \
-                    delayed(PA_I)(i, x_batch[i], y_batch[i], np.array(weight.w), self.C) for i in range(self.PROCESS_NUM)) 
+                    delayed(PA_I)(i, x_batch[i], y_batch[i], weight.w, self.C) for i in range(self.PROCESS_NUM)) 
 
         elif self.METHOD == "PA-II":
             callback = Parallel(n_jobs=self.PROCESS_NUM)( \
-                    delayed(PA_II)(i, x_batch[i], y_batch[i], np.array(weight.w), self.C) for i in range(self.PROCESS_NUM)) 
+                    delayed(PA_II)(i, x_batch[i], y_batch[i], weight.w, self.C) for i in range(self.PROCESS_NUM)) 
 
         # Iterative Parameter Mixture
-        _w_sum = np.asarray([0.0 for _ in xrange(len(weight.w))], dtype=np.float32)
+        _w_sum = sp.csr_matrix((1, weight.dims), dtype=np.float32)
         loss_list = []
         for _w, _loss_list in callback:
             _w_sum += _w

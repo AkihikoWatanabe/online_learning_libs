@@ -16,12 +16,12 @@ class Predictor():
     def predict(self, x_list, weight):
         """
         Params:
-            x_list(list): List of feature vectors. Each vector is represented by np.ndarray
+            x_list(csr_matrix): csr_matrix of feature vectors. Each vector is represented by np.ndarray
             weight(Weight): weight class to use prediction
         Returns:
             y_list(list): List of result labels (or confidence score) on the prediction
         """
         if self.mode == "confidence":
-            return [weight.w.dot(x) for x in x_list]
+            [weight.w.multiply(x_list[j]).sum() for j in xrange(x_list.shape[0])]
         elif self.mode == "classify":
-            return [1.0 if weight.w.dot(x)>=0.0 else -1.0 for x in x_list]
+            return [1.0 if weight.w.multiply(x_list[j]).sum()>=0.0 else -1.0 for j in xrange(x_list.shape[0])]

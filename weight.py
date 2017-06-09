@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import numpy as np
+import scipy.sparse as sp
 import gzip
 import cPickle
 
@@ -9,10 +10,10 @@ class Weight():
     def __init__(self, dims=100000):
         """
         Params:
-            weight(Weight): # of dimension for weight vector (default:100000)
+            dims(int): # of dimension for weight vector (default:100000)
         """
         self.dims = dims
-        self.w = np.asarray([0.0 for _ in xrange(self.dims)], dtype=np.float32) # weight parameter
+        self.w = sp.csr_matrix((1, dims), dtype=np.float32) # weight parameter
         self.epoch = 0
 
     def dump_weight(self, path):
@@ -20,8 +21,7 @@ class Weight():
         Params:
             path(str): path to dump directory
         """        
-        with gzip.open(path+".epoch{epoch_num}.pkl.gz".format(epoch_num=self.epoch), 'wb') as gf:
-            cPickle.dump(self.w, gf, cPickle.HIGHEST_PROTOCOL)
+        np.save(path+".epoch{epoch_num}.npy".format(epoch_num=self.epoch), self.w)
 
     def load_weight(self, path, epoch):
         """ Dump weight vector
@@ -29,8 +29,7 @@ class Weight():
             path(str): path to dump directory
             epoch(int): number of epochs
         """        
-        with gzip.open(file_path+".epoch{epoch_num}".format(epoch_num=self.epoch), 'rb') as gf:
-            self.w = cPickle.load(gf)
+        self.w = np.load(path+".epoch{epoch_num}.npy".format(epoch_num=epoch))
         self.epoch = epoch
 
     def extend_weight_dims(self, dims):
@@ -38,5 +37,5 @@ class Weight():
         Params:
             dims(int): # of dimensions to extend
         """
-        self.w = np.concatenate((self.w, np.asarray([0.0 for _ in xrange(dims)], dtype=np.float32)), axis=0)
-
+        self.w = sp.csr_matrix((self.w.data, self.w.indices, self.w.indptr), (1, dims))
+        self.dims = dims

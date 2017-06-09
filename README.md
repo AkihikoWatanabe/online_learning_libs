@@ -25,7 +25,7 @@ C = 0.01
 parallel_num = 6
 
 # make training data
-# x_train represents feature vector using np.asarray
+# x_train represents feature vector using scipy.sparse.csr_matrix
 # y_train represents labels (1 or -1) corresponding to each feature_vector
 # e.g. discretized feature vector and labels:
 # 	x_train -> [[0.0, 0.0, 1.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0], ...]
@@ -51,7 +51,7 @@ from weight import Weight
 from predictor import Predictor
 
 # make test data
-# x_test represents feature vector using np.asarray
+# x_test represents feature vector using scipy.sparse.csr_matrix 
 # y_test represents labels (1 or -1) corresponding to each feature_vector
 # e.g. discretized feature vector and labels:
 # 	x_test -> [[0.0, 0.0, 1.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0], ...]

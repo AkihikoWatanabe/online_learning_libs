@@ -25,22 +25,51 @@ C = 0.01
 parallel_num = 6
 
 # make training data
-# x_list represents feature vector using np.asarray
-# y_list represents labels (1 or -1) corresponding to each feature_vector
+# x_train represents feature vector using np.asarray
+# y_train represents labels (1 or -1) corresponding to each feature_vector
 # e.g. discretized feature vector and labels:
-# 	x_list -> [[0.0, 0.0, 1.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0], ...]
-# 	y_list -> [1.0, -1.0, ...]
+# 	x_train -> [[0.0, 0.0, 1.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0], ...]
+# 	y_train -> [1.0, -1.0, ...]
 # Also we can use non-discretized (real valued) feature vectors
-x_list, y_list = make_data()
+x_train, y_train = make_data()
 
 weight = Weight(max_feature_num)
 updater = Updater(C, parallel_num)
 
 for _ in xrange(epochs):
 	# update weight and get list of loss
-	loss_list = updater.update(x_list, y_list, weight)
+	loss_list = updater.update(x_train, y_train, weight)
 	# you can use averaged loss value to check the learning
 	loss = sum(loss_list) / float(len(loss_list))
 	# dump weight parameter
 	weight.dump_weight("./models/pa")
+```
+
+## Testing
+```python
+from weight import Weight
+from predictor import Predictor
+
+# make test data
+# x_test represents feature vector using np.asarray
+# y_test represents labels (1 or -1) corresponding to each feature_vector
+# e.g. discretized feature vector and labels:
+# 	x_test -> [[0.0, 0.0, 1.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0], ...]
+# 	y_test -> [1.0, -1.0, ...]
+# Also we can use non-discretized (real valued) feature vectors
+x_test, y_test = make_data()
+
+weight = Weight()
+# load trained weight parameters from model file
+# second argument means number of epochs for weight that you want to load
+weight.load_weight("./models/pa", 30) updater = Updater(C, parallel_num)
+
+# you can set options as follows:
+#	"confidence": predictor returns confidence score for each prediction (real value)
+#       "classify": predictor returns {1, -1} labels according to confidence score for each prediction
+
+predictor = Predictor("classify")
+
+# get result on the prediction for x_test
+y_pred = predictor.predict(x_test, weight)
 ```

@@ -33,15 +33,15 @@ class Updater():
         """
         Params:
             x_list(csr_matrix): csr_matrix of feature vectors.
-            y_list(csr_matrix): csr_matrix of labels corresponding to each feature vector
+            y_list(list): np.ndarray of labels corresponding to each feature vector
         Returns:
-            x_batch(csr_matrix): batch of feature vectors
-            y_batch(csr_matrix): batch of labels
+            x_batch(list): batch of feature vectors
+            y_batch(list): batch of labels
         """
 
         x_batch = []
         y_batch = []
-        N = len(x_list) # # of data
+        N = x_list.shape[0] # # of data
         perm = np.random.permutation(N)
 
         for p in xrange(self.PROCESS_NUM):
@@ -56,11 +56,11 @@ class Updater():
         """ Update weight parameter according to PA-II update rule.
         Params:
             x_list(csr_matrix): csr_matrix of feature vectors.
-            y_list(csr_matrix): csr_matrix of labels corresponding to each feature vector
+            y_list(list): np.ndarray of labels corresponding to each feature vector
         Returns:
             loss_list(list): List of loss value
         """
-        assert x_list.shape[0] == y_list.shape[0], "invalid shape: x_list, y_list"
+        assert x_list.shape[0] == len(y_list), "invalid shape: x_list, y_list"
         
         # make minibatch for Iterative Parameter Mixture
         x_batch, y_batch = self.__make_minibatch(x_list, y_list)

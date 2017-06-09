@@ -21,17 +21,18 @@ class Updater():
     def __init__(self, C=0.01, process_num=1, method="PA-II"):
         """ 
         Params:
-            weight(Weight): # of dimension for weight vector
             C(float): Parameter to adjust the degree of penalty, aggressiveness parameter (C>=0)
             process_num(int): # of parallerization (default:1)
             method(str): learning method (Perceptrion, PA-I, PA-II)
             """ 
         self.C = C # Parameter to adjust the degree of penalty on PA-II (C>=0)
         self.PROCESS_NUM = process_num 
-        self.method = method # default PA-II
-        assert self.method in ["Perceptron", "PA-I", "PA-II"], "Invalid method name {name}".format(self.method)
+        self.METHOD = method # default PA-II
+        assert self.METHOD in ["Perceptron", "PA-I", "PA-II"], "Invalid method name {name}".format(self.METHOD)
 
-    def __make_minibatch(x_list, y_list):
+    def __make_minibatch(self, x_list, y_list):
+        x_batch = []
+        y_batch = []
         N = len(x_list) # # of data
         perm = np.random.permutation(N)
 
@@ -59,15 +60,15 @@ class Updater():
         x_batch, y_batch = self.__make_minibatch(x_list, y_list)
         
         # choose learning method and run
-        if self.type == "Perceptron":
-            callback = Parallel(n_jobs=self.process_num)( \
+        if self.METHOD == "Perceptron":
+            callback = Parallel(n_jobs=self.PROCESS_NUM)( \
                     delayed(Perceptron)(i, x_batch[i], y_batch[i], np.array(weight.w)) for i in range(self.PROCESS_NUM)) 
-        elif self.type == "PA-I":
-            callback = Parallel(n_jobs=self.process_num)( \
+        elif self.METHOD == "PA-I":
+            callback = Parallel(n_jobs=self.PROCESS_NUM)( \
                     delayed(PA_I)(i, x_batch[i], y_batch[i], np.array(weight.w), self.C) for i in range(self.PROCESS_NUM)) 
 
-        elif self.type == "PA-II":
-            callback = Parallel(n_jobs=self.process_num)( \
+        elif self.METHOD == "PA-II":
+            callback = Parallel(n_jobs=self.PROCESS_NUM)( \
                     delayed(PA_II)(i, x_batch[i], y_batch[i], np.array(weight.w), self.C) for i in range(self.PROCESS_NUM)) 
 
         # Iterative Parameter Mixture

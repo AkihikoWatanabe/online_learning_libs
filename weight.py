@@ -1,6 +1,8 @@
 # coding=utf-8
 
 import numpy as np
+import gzip
+import cPickle
 
 class Weight():
 
@@ -18,7 +20,7 @@ class Weight():
         Params:
             path(str): path to dump directory
         """        
-        with gzip.open(file_path+".epoch{epoch_num}".format(epoch_num=self.epoch), 'wb') as gf:
+        with gzip.open(path+".epoch{epoch_num}".format(epoch_num=self.epoch), 'wb') as gf:
             cPickle.dump(self.w, gf, cPickle.HIGHEST_PROTOCOL)
 
     def load_weight(self, path, epoch):

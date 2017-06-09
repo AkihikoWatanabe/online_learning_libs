@@ -31,6 +31,15 @@ class Updater():
         assert self.METHOD in ["Perceptron", "PA-I", "PA-II"], "Invalid method name {name}".format(self.METHOD)
 
     def __make_minibatch(self, x_list, y_list):
+        """
+        Params:
+            x_list(list): List of feature vectors. Each vector is represented by np.ndarray
+            y_list(list): List of labels corresponding to each feature vector
+        Returns:
+            x_batch(list): batch of feature vectors
+            y_batch(list): batch of labels
+        """
+
         x_batch = []
         y_batch = []
         N = len(x_list) # # of data
@@ -47,8 +56,8 @@ class Updater():
     def update(self, x_list, y_list, weight):
         """ Update weight parameter according to PA-II update rule.
         Params:
-            x_list(list): List of feature vectors. Each vector is represented by np.ndarray.
-            y_list(list): List of labels corresponding to each feature vector.
+            x_list(list): List of feature vectors. Each vector is represented by np.ndarray
+            y_list(list): List of labels corresponding to each feature vector
         Returns:
             loss_list(list): List of loss value
         """

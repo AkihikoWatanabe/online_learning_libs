@@ -1,10 +1,10 @@
 # online_learning_libs
 This is the python implementation of the online learning method using Iterative Parameter Mixture.
 This implementation is now supporting:
-
+```
     - Perceptron
-
     - PA-I, PA-II
+```
 
 # Example
 ## Training
@@ -29,7 +29,7 @@ parallel_num = 6
 # y_list represents labels (1 or -1) corresponding to each feature_vector
 # e.g. discretized feature vector and labels:
 # 	x_list -> [[0.0, 0.0, 1.0, 0.0, 1.0], [1.0, 1.0, 0.0, 0.0, 0.0], ...]
-# 	y_list -> [1.0, -1.0]
+# 	y_list -> [1.0, -1.0, ...]
 # Also we can use non-discretized (real valued) feature vectors
 x_list, y_list = make_data()
 

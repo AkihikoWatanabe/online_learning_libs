@@ -6,6 +6,8 @@ import gzip
 import cPickle
 
 class Weight():
+    """ Class for weight parameter for Perceptrion, PA-I, PA-II
+    """
 
     def __init__(self, dims=100000):
         """

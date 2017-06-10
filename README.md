@@ -4,13 +4,14 @@ This implementation is now supporting:
 ```
     - Perceptron
     - PA-I, PA-II
+    - AROW
 ```
 
 # Example
 ## Training
 ```python
 from updater import Updater
-from weight import Weight
+from weight import Weight # if you want to use AROW, use DistWeight instead of Weight
 
 # number of maximum epochs
 epochs = 100
@@ -47,7 +48,7 @@ for _ in xrange(epochs):
 
 ## Testing
 ```python
-from weight import Weight
+from weight import Weight # if you want to use AROW, use DistWeight instead of Weight
 from predictor import Predictor
 
 # make test data

@@ -29,7 +29,7 @@ class Weight():
             path(str): path to dump directory
             epoch(int): number of epochs
         """        
-        self.w = np.load(path+".epoch{epoch_num}".format(epoch_num=epoch))
+        self.w = np.load(path+".epoch{epoch_num}.npy".format(epoch_num=epoch))
         self.epoch = epoch
 
     def extend_weight_dims(self, dims):

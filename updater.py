@@ -107,5 +107,6 @@ class Updater():
             loss_list, mu, sigma = AROW(x_list, y_list, weight.get_weight(), weight.get_conf(), self.r)
             weight.set_weight(mu)
             weight.set_conf(sigma)
+            weight.epoch += 1
 
         return loss_list

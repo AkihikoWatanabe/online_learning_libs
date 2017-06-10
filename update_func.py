@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import numpy as np
-import scipy as sp
+import scipy.sparse as sp
 
 def hinge_loss(x, y, w):
     """ Calculate hinge loss.

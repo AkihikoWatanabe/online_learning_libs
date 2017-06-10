@@ -21,7 +21,7 @@ class Weight():
         Params:
             path(str): path to dump directory
         """        
-        np.save(path+".epoch{epoch_num}".format(epoch_num=self.epoch), self.w)
+        np.savez(path+".epoch{epoch_num}".format(epoch_num=self.epoch), data=self.w.data, indices=self.w.indices, indptr=self.w.indptr, dims=[self.dims])
 
     def load_weight(self, path, epoch):
         """ Dump weight vector
@@ -29,7 +29,9 @@ class Weight():
             path(str): path to dump directory
             epoch(int): number of epochs
         """        
-        self.w = np.load(path+".epoch{epoch_num}.npy".format(epoch_num=epoch))
+        data = np.load(path+".epoch{epoch_num}.npz".format(epoch_num=epoch))
+        dims = data["dims"][0]
+        seif.w = sp.csr_matrix((data["data"], data["indices"], data["indptr"]), (1, dims))
         self.epoch = epoch
 
     def extend_weight_dims(self, dims):

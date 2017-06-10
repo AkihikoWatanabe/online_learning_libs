@@ -18,6 +18,17 @@ class Weight():
         self.w = sp.csr_matrix((1, dims), dtype=np.float32) # weight parameter
         self.epoch = 0
 
+    def set_weight(self, new_weight):
+        """
+        Params:
+            new_weight(csr_marix): new weight parameter to set
+        """
+        self.w = new_weight
+
+    def get_weight(self):
+
+        return self.w
+
     def dump_weight(self, path):
         """ Dump weight vector
         Params:

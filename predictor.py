@@ -21,7 +21,8 @@ class Predictor():
         Returns:
             y_list(list): List of result labels (or confidence score) on the prediction
         """
+        w = weight.get_weight()
         if self.MODE == "confidence":
-            return [weight.w.multiply(x_list[j]).sum() for j in xrange(x_list.shape[0])]
+            return [w.multiply(x_list[j]).sum() for j in xrange(x_list.shape[0])]
         elif self.MODE == "classify":
-            return [1.0 if weight.w.multiply(x_list[j]).sum()>=0.0 else -1.0 for j in xrange(x_list.shape[0])]
+            return [1.0 if w.multiply(x_list[j]).sum()>=0.0 else -1.0 for j in xrange(x_list.shape[0])]

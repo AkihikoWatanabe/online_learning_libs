@@ -72,7 +72,7 @@ def PA_II(i, x_batch, y_batch, w, C):
         loss_list.append(loss)
         if loss > 0.0:
             # w^{t+1} = w^{t} + hinge_loss(x, y, w) / (norm(x)+ 1/2C) * y * x
-            wg+= (loss / (x_batch[j].multiply(x_batch[j]).sum() + 1.0 / (2.0 * C))) * y_batch[j] * x_batch[j]
+            w += (loss / (x_batch[j].multiply(x_batch[j]).sum() + 1.0 / (2.0 * C))) * y_batch[j] * x_batch[j]
     return w, loss_list
 
 def AROW(x_list, y_list, mu, sigma, r):

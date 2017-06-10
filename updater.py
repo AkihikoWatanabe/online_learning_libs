@@ -94,15 +94,15 @@ class Updater():
         if self.METHOD == "Perceptron":
             callback = Parallel(n_jobs=self.PROCESS_NUM)( \
                     delayed(Perceptron)(i, x_batch[i], y_batch[i], weight.get_weight()) for i in range(self.PROCESS_NUM)) 
-            loss_list = __iterative_parameter_mixture(self, callback, weight)
+            loss_list = self.__iterative_parameter_mixture(callback, weight)
         elif self.METHOD == "PA-I":
             callback = Parallel(n_jobs=self.PROCESS_NUM)( \
                     delayed(PA_I)(i, x_batch[i], y_batch[i], weight.get_weight(), self.C) for i in range(self.PROCESS_NUM)) 
-            loss_list = __iterative_parameter_mixture(self, callback, weight)
+            loss_list = self.__iterative_parameter_mixture(callback, weight)
         elif self.METHOD == "PA-II":
             callback = Parallel(n_jobs=self.PROCESS_NUM)( \
                     delayed(PA_II)(i, x_batch[i], y_batch[i], weight.get_weight(), self.C) for i in range(self.PROCESS_NUM)) 
-            loss_list = __iterative_parameter_mixture(self, callback, weight)
+            loss_list = self.__iterative_parameter_mixture(callback, weight)
         elif self.METHOD == "AROW":
             loss_list, mu, sigma = AROW(x_list, y_list, weight.get_weight(), weight.get_conf(), self.r)
             weight.set_weight(mu)

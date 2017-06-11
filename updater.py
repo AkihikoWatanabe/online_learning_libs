@@ -18,7 +18,7 @@ class Updater():
     """ This class support some online learning methods, i.e. weight update method, using Iterative Parameter Mixture.
     """
 
-    def __init__(self, C=0.01, r=0.1, process_num=1, method="PA-II"):
+    def __init__(self, C=0.01, r=1.0, process_num=1, method="PA-II"):
         """ 
         Params:
             C(float): Parameter to adjust the degree of penalty, aggressiveness parameter (C>=0)

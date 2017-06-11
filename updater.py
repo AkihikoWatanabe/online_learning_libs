@@ -12,7 +12,7 @@ import numpy as np
 import scipy.sparse as sp
 from joblib import Parallel, delayed
 
-from update_func import Perceptron, PA_I, PA_II
+from update_func import Perceptron, PA_I, PA_II, AROW
 
 class Updater():
     """ This class support some online learning methods, i.e. weight update method, using Iterative Parameter Mixture.

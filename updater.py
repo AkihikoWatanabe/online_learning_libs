@@ -45,6 +45,7 @@ class Updater():
         x_batch = []
         y_batch = []
         N = x_list.shape[0] # # of data
+        np.random.seed(0) # set seed for permutation
         perm = np.random.permutation(N)
 
         for p in xrange(self.PROCESS_NUM):

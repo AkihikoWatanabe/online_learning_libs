@@ -94,7 +94,7 @@ def AROW(x_list, y_list, mu, sigma, r):
         m = mu.multiply(x_list[j]).sum()
         # calculate confidence
         # sigma * x 
-        cx = sp.csr_matrix(sigma.multiply(x).T.sum(axis=0))
+        cx = sp.csr_matrix(sigma.multiply(x_list[j]).T.sum(axis=0))
         v = cx.multiply(x_list[j]).sum()
         #loss = 1.0 if np.sign(m)!=np.sign(y_list[j]) else 0.0
         loss = hinge_loss(x_list[j], y_list[j], mu)

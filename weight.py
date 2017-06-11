@@ -44,7 +44,7 @@ class Weight():
         """        
         data = np.load(path+".epoch{epoch_num}.npz".format(epoch_num=epoch))
         dims = data["dims"][0]
-        seif.w = sp.csr_matrix((data["data"], data["indices"], data["indptr"]), (1, dims))
+        self.w = sp.csr_matrix((data["data"], data["indices"], data["indptr"]), (1, dims))
         self.epoch = epoch
 
     def extend_weight_dims(self, dims):

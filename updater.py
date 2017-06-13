@@ -109,7 +109,7 @@ class Updater():
             callback = Parallel(n_jobs=self.PROCESS_NUM)( \
                     delayed(PA_II)(i, x_batch[i], y_batch[i], weight.get_weight(), self.C) for i in range(self.PROCESS_NUM)) 
             loss_list = self.__iterative_parameter_mixture(callback, weight)
-        else self.METHOD == "CW":
+        elif self.METHOD == "CW":
             loss_list, mu, sigma = CW(x_list, y_list, weight.get_weight(), weight.get_conf(), self.eta)
             weight.set_weight(mu)
             weight.set_conf(sigma)
@@ -119,12 +119,12 @@ class Updater():
             weight.set_weight(mu)
             weight.set_conf(sigma)
             weight.epoch += 1
-        else self.METHOD == "SCW-I":
+        elif self.METHOD == "SCW-I":
             loss_list, mu, sigma = SCW_I(x_list, y_list, weight.get_weight(), weight.get_conf(), self.C, self.eta)
             weight.set_weight(mu)
             weight.set_conf(sigma)
             weight.epoch += 1
-        else self.METHOD == "SCW-II":
+        elif self.METHOD == "SCW-II":
             loss_list, mu, sigma = SCW_II(x_list, y_list, weight.get_weight(), weight.get_conf(), self.C, self.eta)
             weight.set_weight(mu)
             weight.set_conf(sigma)

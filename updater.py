@@ -5,32 +5,35 @@ This is the python implementation of the online learning method using Iterative 
 This implementation is now supporting:
     - Perceptron
     - PA-I, PA-II
+    - CW
     - AROW
+    - SCW-I, SCW-II
 """
 
 import numpy as np
 import scipy.sparse as sp
 from joblib import Parallel, delayed
 
-from update_func import Perceptron, PA_I, PA_II, AROW
+from update_func import Perceptron, PA_I, PA_II, CW, AROW, SCW_I, SCW_II
 
 class Updater():
     """ This class support some online learning methods, i.e. weight update method, using Iterative Parameter Mixture.
     """
 
-    def __init__(self, C=0.01, r=1.0, process_num=1, method="PA-II"):
+    def __init__(self, C=0.01, r=1.0, eta=0.1, process_num=1, method="PA-II"):
         """ 
         Params:
             C(float): Parameter to adjust the degree of penalty, aggressiveness parameter (C>=0)
             r(float): regularization parameter for AROW
             process_num(int): # of parallerization (default:1)
-            method(str): learning method (Perceptrion, PA-I, PA-II, AROW)
+            method(str): learning method (Perceptrion, PA-I, PA-II, CW, AROW, SCW-I, SCW-II)
             """ 
-        self.C = C # Parameter to adjust the degree of penalty on PA-II (C>=0)
+        self.C = C # Parameter to adjust the degree of penalty on PA-II and SCW(C>=0)
         self.r = r # regularization parameter for AROW  
+        self.eta = eta # confidence parameter on CW and SCW
         self.PROCESS_NUM = process_num 
         self.METHOD = method # default PA-II
-        assert self.METHOD in ["Perceptron", "PA-I", "PA-II", "AROW"], "Invalid method name {name}".format(self.METHOD)
+        assert self.METHOD in ["Perceptron", "PA-I", "PA-II", "CW", "AROW", "SCW-I", "SCW-II"], "Invalid method name {name}".format(self.METHOD)
 
     def __make_minibatch(self, x_list, y_list):
         """
@@ -77,7 +80,7 @@ class Updater():
         return loss_list
 
     def update(self, x_list, y_list, weight):
-        """ Update weight parameter according to PA-II update rule.
+        """ Update weight parameter according to {self.METHOD} update rule.
         Params:
             x_list(csr_matrix): csr_matrix of feature vectors.
             y_list(list): np.ndarray of labels corresponding to each feature vector
@@ -88,7 +91,9 @@ class Updater():
         assert x_list.shape[0] == len(y_list), "invalid shape: x_list, y_list"
         
         # make minibatch for Iterative Parameter Mixture
-        if self.METHOD != "AROW":
+        if self.METHOD == "Perceptrion" or
+           self.METHOD == "PA-I" or
+           self.METHOD == "PA-II":
             x_batch, y_batch = self.__make_minibatch(x_list, y_list)
         
         # choose learning method and run
@@ -104,8 +109,23 @@ class Updater():
             callback = Parallel(n_jobs=self.PROCESS_NUM)( \
                     delayed(PA_II)(i, x_batch[i], y_batch[i], weight.get_weight(), self.C) for i in range(self.PROCESS_NUM)) 
             loss_list = self.__iterative_parameter_mixture(callback, weight)
+        else self.METHOD == "CW":
+            loss_list, mu, sigma = CW(x_list, y_list, weight.get_weight(), weight.get_conf(), self.eta)
+            weight.set_weight(mu)
+            weight.set_conf(sigma)
+            weight.epoch += 1
         elif self.METHOD == "AROW":
             loss_list, mu, sigma = AROW(x_list, y_list, weight.get_weight(), weight.get_conf(), self.r)
+            weight.set_weight(mu)
+            weight.set_conf(sigma)
+            weight.epoch += 1
+        else self.METHOD == "SCW-I":
+            loss_list, mu, sigma = SCW_I(x_list, y_list, weight.get_weight(), weight.get_conf(), self.C, self.eta)
+            weight.set_weight(mu)
+            weight.set_conf(sigma)
+            weight.epoch += 1
+        else self.METHOD == "SCW-II":
+            loss_list, mu, sigma = SCW_II(x_list, y_list, weight.get_weight(), weight.get_conf(), self.C, self.eta)
             weight.set_weight(mu)
             weight.set_conf(sigma)
             weight.epoch += 1

@@ -16,7 +16,8 @@ class DistWeight():
         """
         self.dims = dims
         self.mu = sp.csr_matrix((1, dims), dtype=np.float32) # weight parameter
-        self.sigma = sp.csr_matrix(([1.0 for _ in xrange(dims)], (range(dims), range(dims))), (dims, dims)) # confidence parameter
+        self.sigma = sp.csr_matrix(([1.0 for _ in xrange(dims)], ([0 for _ in xrange(dims)], range(dims))), (1, dims), dtype=np.float32) # confidence parameter
+        #self.sigma = sp.csr_matrix(([1.0 for _ in xrange(dims)], (range(dims), range(dims))), (dims, dims)) # confidence parameter
         self.epoch = 0
 
     def set_weight(self, new_weight):

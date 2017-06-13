@@ -2,6 +2,7 @@
 
 import numpy as np
 import scipy.sparse as sp
+from time import time
 
 def hinge_loss(x, y, w):
     """ Calculate hinge loss.
@@ -94,7 +95,7 @@ def AROW(x_list, y_list, mu, sigma, r):
         m = mu.multiply(x_list[j]).sum()
         # calculate confidence
         # sigma * x 
-        cx = sp.csr_matrix(sigma.multiply(x_list[j]).T.sum(axis=0))
+        cx = sigma.multiply(x_list[j])
         v = cx.multiply(x_list[j]).sum()
         #loss = 1.0 if np.sign(m)!=np.sign(y_list[j]) else 0.0
         loss = hinge_loss(x_list[j], y_list[j], mu)
@@ -102,10 +103,8 @@ def AROW(x_list, y_list, mu, sigma, r):
         if m * y_list[j] < 1.0:
             beta = 1.0 / (v + r)
             alpha = loss * beta
+            # update mu
             mu += alpha * y_list[j] * cx
-            # sigma * x
-            _cx = sp.csr_matrix(sigma.multiply(x_list[j]).sum(axis=1))
-            # x^{T} * sigma
-            _xc = x_list[j].dot(sigma)
-            sigma += -beta * _cx.dot(_xc)
+            # update sigma
+            sigma += -beta * cx.multiply(cx)
     return loss_list, mu, sigma

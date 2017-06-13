@@ -1,5 +1,5 @@
 # online_learning_libs
-This is the python implementation of the online learning method using Iterative Parameter Mixture.
+This is a python implementation of online learning methods using Iterative Parameter Mixture.
 This implementation is now supporting:
 ```
     - Perceptron
@@ -23,8 +23,8 @@ epochs = 100
 # number of maximum number of features
 max_feature_num = 5
 
-# aggressive parameter
-C = 0.01 for PA, CW and SCW
+# aggressive parameter for PA, CW and SCW
+C = 0.01
 
 # confidence parameter for CW and SCW
 eta = 0.1
@@ -44,11 +44,9 @@ parallel_num = 6
 # Also we can use non-discretized (real valued) feature vectors
 x_train, y_train = make_data()
 
-# init Weight
 weight = Weight(max_feature_num)
 
-# init Updater, updater receive hyper parameters, parallel_num and method that you want to use
-# you can choose method as follows:
+# you can choose method for updater as follows:
 #	- Perceptrion
 #	- PA-I, PA-II (default)
 #	- CW

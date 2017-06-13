@@ -2,7 +2,7 @@
 
 import numpy as np
 import scipy.sparse as sp
-from scipy.stast import norm
+from scipy.stats import norm
 
 def hinge_loss(x, y, w):
     """ Calculate hinge loss.

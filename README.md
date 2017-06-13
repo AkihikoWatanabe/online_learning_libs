@@ -15,7 +15,7 @@ Note that, AROW and SCW is implemented using approximation algorithm, i.e. covar
 ## Training
 ```python
 from updater import Updater
-from weight import Weight # if you want to use AROW, use DistWeight instead of Weight
+from weight import Weight # if you want to use CW, AROW or SCW, use DistWeight instead of Weight
 
 # number of maximum epochs
 epochs = 100
@@ -24,7 +24,13 @@ epochs = 100
 max_feature_num = 5
 
 # aggressive parameter
-C = 0.01
+C = 0.01 for PA, CW and SCW
+
+# confidence parameter for CW and SCW
+eta = 0.1
+
+# regularization parameter for AROW
+r = 0.1
 
 # number of parallerization
 parallel_num = 6
@@ -38,8 +44,17 @@ parallel_num = 6
 # Also we can use non-discretized (real valued) feature vectors
 x_train, y_train = make_data()
 
+# init Weight
 weight = Weight(max_feature_num)
-updater = Updater(C, parallel_num)
+
+# init Updater, updater receive hyper parameters, parallel_num and method that you want to use
+# you can choose method as follows:
+#	- Perceptrion
+#	- PA-I, PA-II (default)
+#	- CW
+#	- AROW
+#	- SCW-I, SCW-II
+updater = Updater(C=C, r=r, eta=eta, process_num=parallel_num, method="PA-II")
 
 for _ in xrange(epochs):
 	# update weight and get list of loss

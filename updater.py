@@ -79,6 +79,30 @@ class Updater():
 
         return loss_list
 
+    def __iterative_parameter_mixture_for_distweight(self, callback, weight):
+        """
+        Params:
+            callback: callback for parallerized process
+            weight(Weight): current weight class
+        Returns:
+            loss_list(list): list of loss value
+        """
+        _mu_sum = sp.csr_matrix((1, weight.dims), dtype=np.float32)
+        _sigma_sum = sp.csr_matrix(([1.0 for _ in xrange(weight.dims)], ([0 for _ in xrange(weight.dims)], range(weight.dims))), (1, weight.dims), dtype=np.float32)
+
+        loss_list = []
+        for _loss_list, _mu, _sigma in callback:
+            _mu_sum += _mu
+            _sigma_sum += _sigma
+            loss_list += _loss_list
+
+        # insert updated weight
+        weight.set_weight(1.0 / self.PROCESS_NUM * _mu_sum)
+        weight.set_conf(1.0 / self.PROCESS_NUM * _sigma_sum)
+        weight.epoch += 1
+
+        return loss_list
+
     def update(self, x_list, y_list, weight):
         """ Update weight parameter according to {self.METHOD} update rule.
         Params:
@@ -110,24 +134,44 @@ class Updater():
                     delayed(PA_II)(i, x_batch[i], y_batch[i], weight.get_weight(), self.C) for i in range(self.PROCESS_NUM)) 
             loss_list = self.__iterative_parameter_mixture(callback, weight)
         elif self.METHOD == "CW":
+            callback = Parallel(n_jobs=self.PROCESS_NUM)( \
+                    delayed(CW)(x_batch[i], y_batch[i], weight.get_weight(), weight.get_conf(), self.eta) for i in range(self.PROCESS_NUM)) 
+            loss_list = self.__iterative_parameter_mixture_for_distweight(callback, weight)
+            """
             loss_list, mu, sigma = CW(x_list, y_list, weight.get_weight(), weight.get_conf(), self.eta)
             weight.set_weight(mu)
             weight.set_conf(sigma)
             weight.epoch += 1
+            """
         elif self.METHOD == "AROW":
+            callback = Parallel(n_jobs=self.PROCESS_NUM)( \
+                    delayed(AROW)(x_batch[i], y_batch[i], weight.get_weight(), weight.get_conf(), self.r) for i in range(self.PROCESS_NUM)) 
+            loss_list = self.__iterative_parameter_mixture_for_distweight(callback, weight)
+            """
             loss_list, mu, sigma = AROW(x_list, y_list, weight.get_weight(), weight.get_conf(), self.r)
             weight.set_weight(mu)
             weight.set_conf(sigma)
             weight.epoch += 1
+            """
         elif self.METHOD == "SCW-I":
+            callback = Parallel(n_jobs=self.PROCESS_NUM)( \
+                    delayed(SCW-I)(x_batch[i], y_batch[i], weight.get_weight(), weight.get_conf(), self.C, self.eta) for i in range(self.PROCESS_NUM)) 
+            loss_list = self.__iterative_parameter_mixture_for_distweight(callback, weight)
+            """
             loss_list, mu, sigma = SCW_I(x_list, y_list, weight.get_weight(), weight.get_conf(), self.C, self.eta)
             weight.set_weight(mu)
             weight.set_conf(sigma)
             weight.epoch += 1
+            """
         elif self.METHOD == "SCW-II":
+            callback = Parallel(n_jobs=self.PROCESS_NUM)( \
+                    delayed(SCW-II)(x_batch[i], y_batch[i], weight.get_weight(), weight.get_conf(), self.C, self.eta) for i in range(self.PROCESS_NUM)) 
+            loss_list = self.__iterative_parameter_mixture_for_distweight(callback, weight)
+            """
             loss_list, mu, sigma = SCW_II(x_list, y_list, weight.get_weight(), weight.get_conf(), self.C, self.eta)
             weight.set_weight(mu)
             weight.set_conf(sigma)
             weight.epoch += 1
+            """
 
         return loss_list

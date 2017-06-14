@@ -80,5 +80,5 @@ class DistWeight():
         self.mu = sp.csr_matrix((self.mu.data, self.mu.indices, self.mu.indptr), (1, dims))
         #self.sigma = sp.csr_matrix(np.concatenate(self.sigma.toarray()[0] + \
         #        [1.0 for _ in xrange(dims-self.dims)]))
-        self.sigma = sp.csr_matrix(([1.0 for _ in xrange(dims)], (range(dims), range(dims))), (1, dims)) # confidence parameter
+        self.sigma = sp.csr_matrix(([1.0 for _ in xrange(dims)], ([0 for _ in xrange(dims)], range(dims))), (1, dims)) # confidence parameter
         self.dims = dims

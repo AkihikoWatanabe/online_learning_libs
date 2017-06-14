@@ -64,10 +64,10 @@ class DistWeight():
         """        
         data = np.load(path+".epoch{epoch_num}.npz".format(epoch_num=epoch))
         dims = data["dims"][0]
-        seif.mu = sp.csr_matrix((data["mu_data"], \
+        self.mu = sp.csr_matrix((data["mu_data"], \
                                  data["mu_indices"], \
                                  data["mu_indptr"]), (1, dims))
-        seif.sigma = sp.csr_matrix((data["sigma_data"], \
+        self.sigma = sp.csr_matrix((data["sigma_data"], \
                                  data["sigma_indices"], \
                                  data["sigma_indptr"]), (dims, dims))
         self.epoch = epoch

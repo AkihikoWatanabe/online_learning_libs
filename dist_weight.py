@@ -69,7 +69,7 @@ class DistWeight():
                                  data["mu_indptr"]), (1, dims))
         self.sigma = sp.csr_matrix((data["sigma_data"], \
                                  data["sigma_indices"], \
-                                 data["sigma_indptr"]), (dims, dims))
+                                 data["sigma_indptr"]), (1, dims))
         self.epoch = epoch
 
     def extend_weight_dims(self, dims):
@@ -80,5 +80,5 @@ class DistWeight():
         self.mu = sp.csr_matrix((self.mu.data, self.mu.indices, self.mu.indptr), (1, dims))
         #self.sigma = sp.csr_matrix(np.concatenate(self.sigma.toarray()[0] + \
         #        [1.0 for _ in xrange(dims-self.dims)]))
-        self.sigma = sp.csr_matrix(([1.0 for _ in xrange(dims)], (range(dims), range(dims))), (dims, dims)) # confidence parameter
+        self.sigma = sp.csr_matrix(([1.0 for _ in xrange(dims)], (range(dims), range(dims))), (1, dims)) # confidence parameter
         self.dims = dims

@@ -115,11 +115,13 @@ class Updater():
         assert x_list.shape[0] == len(y_list), "invalid shape: x_list, y_list"
         
         # make minibatch for Iterative Parameter Mixture
-        if self.METHOD == "Perceptrion" or \
-           self.METHOD == "PA-I" or \
-           self.METHOD == "PA-II":
-            x_batch, y_batch = self.__make_minibatch(x_list, y_list)
-        
+        #if self.METHOD == "Perceptrion" or \
+        #   self.METHOD == "PA-I" or \
+        #   self.METHOD == "PA-II":
+        #    x_batch, y_batch = self.__make_minibatch(x_list, y_list)
+
+        x_batch, y_batch = self.__make_minibatch(x_list, y_list)
+
         # choose learning method and run
         if self.METHOD == "Perceptron":
             callback = Parallel(n_jobs=self.PROCESS_NUM)( \

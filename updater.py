@@ -157,7 +157,7 @@ class Updater():
             """
         elif self.METHOD == "SCW-I":
             callback = Parallel(n_jobs=self.PROCESS_NUM)( \
-                    delayed(SCW-I)(x_batch[i], y_batch[i], weight.get_weight(), weight.get_conf(), self.C, self.eta) for i in range(self.PROCESS_NUM)) 
+                    delayed(SCW_I)(x_batch[i], y_batch[i], weight.get_weight(), weight.get_conf(), self.C, self.eta) for i in range(self.PROCESS_NUM)) 
             loss_list = self.__iterative_parameter_mixture_for_distweight(callback, weight)
             """
             loss_list, mu, sigma = SCW_I(x_list, y_list, weight.get_weight(), weight.get_conf(), self.C, self.eta)
@@ -167,7 +167,7 @@ class Updater():
             """
         elif self.METHOD == "SCW-II":
             callback = Parallel(n_jobs=self.PROCESS_NUM)( \
-                    delayed(SCW-II)(x_batch[i], y_batch[i], weight.get_weight(), weight.get_conf(), self.C, self.eta) for i in range(self.PROCESS_NUM)) 
+                    delayed(SCW_II)(x_batch[i], y_batch[i], weight.get_weight(), weight.get_conf(), self.C, self.eta) for i in range(self.PROCESS_NUM)) 
             loss_list = self.__iterative_parameter_mixture_for_distweight(callback, weight)
             """
             loss_list, mu, sigma = SCW_II(x_list, y_list, weight.get_weight(), weight.get_conf(), self.C, self.eta)

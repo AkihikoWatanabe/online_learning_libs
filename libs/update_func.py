@@ -3,7 +3,7 @@
 import numpy as np
 import scipy.sparse as sp
 from scipy.stats import norm
-import tqdm
+from tqdm import tqdm
 
 def hinge_loss(x, y, w):
     """ Calculate hinge loss.

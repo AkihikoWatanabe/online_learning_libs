@@ -3,6 +3,7 @@
 import numpy as np
 import scipy.sparse as sp
 from scipy.stats import norm
+import tqdm
 
 def hinge_loss(x, y, w):
     """ Calculate hinge loss.
@@ -36,7 +37,7 @@ def Perceptron(i, x_batch, y_batch, w):
         w(csr_matrix): updated parameter
     """
    
-    for j in xrange(x_batch.shape[0]):
+    for j in tqdm(xrange(x_batch.shape[0])):
         # y * w^{T} * x
         if y_batch[j] * w.multiply(x_batch[j]).sum() < 0:
             # w^{t+1} = w^{t} + y * x
@@ -56,7 +57,7 @@ def PA_I(i, x_batch, y_batch, w, C):
         loss_list(list): list of loss value
     """
     loss_list = []
-    for j in xrange(x_batch.shape[0]):
+    for j in tqdm(xrange(x_batch.shape[0])):
         loss = hinge_loss(x_batch[j], y_batch[j], w)
         loss_list.append(loss)
         if loss > 0.0:
@@ -77,7 +78,7 @@ def PA_II(i, x_batch, y_batch, w, C):
         loss_list(list): list of loss value
     """
     loss_list = []
-    for j in xrange(x_batch.shape[0]):
+    for j in tqdm(xrange(x_batch.shape[0])):
         loss = hinge_loss(x_batch[j], y_batch[j], w)
         loss_list.append(loss)
         if loss > 0.0:
@@ -100,7 +101,7 @@ def CW(x_list, y_list, mu, sigma, eta):
     phi = norm.cdf(eta) # cumulative function over normal dist
     psi = 1.0 + phi ** 2 / 2.0
     zeta = 1.0 + phi ** 2
-    for j in xrange(x_list.shape[0]):
+    for j in tqdm(xrange(x_list.shape[0])):
         # margin
         m = y_list[j] * mu.multiply(x_list[j]).sum()
         # confidence
@@ -132,7 +133,7 @@ def AROW(x_list, y_list, mu, sigma, r):
         sigma(csr_matrix): updated confidence
     """
     loss_list = []
-    for j in xrange(x_list.shape[0]):
+    for j in tqdm(xrange(x_list.shape[0])):
         # calculate margin
         m = mu.multiply(x_list[j]).sum()
         # calculate confidence
@@ -169,7 +170,7 @@ def SCW_I(x_list, y_list, mu, sigma, C, eta):
     phi = norm.cdf(eta) # cumulative function over normal dist
     psi = 1.0 + phi ** 2 / 2.0
     zeta = 1.0 + phi ** 2
-    for j in xrange(x_list.shape[0]):
+    for j in tqdm(xrange(x_list.shape[0])):
         # margin
         m = y_list[j] * mu.multiply(x_list[j]).sum()
         # confidence
@@ -207,7 +208,7 @@ def SCW_II(x_list, y_list, mu, sigma, C, eta):
     phi = norm.cdf(eta) # cumulative function over normal dist
     psi = 1.0 + phi ** 2 / 2.0
     zeta = 1.0 + phi ** 2
-    for j in xrange(x_list.shape[0]):
+    for j in tqdm(xrange(x_list.shape[0])):
         # margin
         m = y_list[j] * mu.multiply(x_list[j]).sum()
         # confidence

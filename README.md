@@ -9,6 +9,13 @@ This implementation is now supporting:
     - SCW-I, SCW-II
 ```
 
+# Requirements
+* python 2.7
+* tqdm
+* numpy
+* scipy
+* joblib
+
 Note that, AROW and SCW is implemented using approximation algorithm, i.e. covariance matrix is updated by diag(x) instead of x^{T}x.
 
 # Example
